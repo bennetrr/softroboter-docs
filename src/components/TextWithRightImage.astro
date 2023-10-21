@@ -3,7 +3,7 @@ import {Image} from 'astro:assets';
 
 interface Props {
   image: {
-    src: string;
+    src: any;
     alt: string;
   }
 }
@@ -16,7 +16,7 @@ const {image} = Astro.props;
     <slot/>
   </div>
 
-  <Image src={import((`../assets/${image.src}`))} alt={image.alt} class="image"/>
+  <Image src={image.src} alt={image.alt} class="image"/>
 </div>
 
 <style>

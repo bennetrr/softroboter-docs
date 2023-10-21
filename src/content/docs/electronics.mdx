@@ -17,7 +17,7 @@ Wir haben uns dazu entschlossen, einen Druckminderer zwischen die Pumpe und den 
 Nach dem Druckregler kommt ein Magnetventil, das anfangs als Schnellauslass gedacht war, damit der Softgripper nicht zu lange zum Loslassen braucht.
 Mit dem aktuellen Aufbau ist ein Ausgangsventil allerdings zwingend erforderlich, da der Druckregler nur in eine Richtung Druck durchlässt.
 
-<TextWithRightImage image={{src: 'electronics/hub.jpg', alt: 'HUB nach dem Druck'}}>
+<TextWithRightImage image={{src: import('../../assets/electronics/hub.jpg'), alt: 'HUB nach dem Druck'}}>
   Ventil und Pumpe / Druckregler sind über ein 3D-gedrucktes T-Stück miteinander verbunden, das an die interne Druckleitung des Roboterarms angeschlossen ist.
   Die Leitung führt zum anderen Ende des Arms, wo die Werkzeuge angebracht werden.
 
@@ -33,7 +33,7 @@ Wir wollten, dass alles über ein Gerät gesteuert werden kann.
 Deshalb kann man den Softgripper über uArm Studio ein- und ausschalten.
 Dazu mussten wir ein Signal aus dem Roboterarm bekommen, mit dem wir die Pumpe und das Ventil schalten können.
 
-<TextWithRightImage image={{src: 'electronics/electronics_testing.jpg', alt: 'Testen der Steuerelektronik'}}>
+<TextWithRightImage image={{src: import('../../assets/electronics/electronics_testing.jpg'), alt: 'Testen der Steuerelektronik'}}>
   Das Signal, das wir dazu benutzen, ist eigentlich zur direkten Ansteuerung der Pumpe und des Ventils gedacht.
   Weil wir aber die Druckrichtung geändert haben (vorher hat die Pumpe einen Saugnapf angetrieben), können wir die Pumpe nicht starten und gleichzeitig das Ventil schließen, weil das Ventil nicht richtig schließt, wenn Druck anliegt.
   Die Lösung ist eine Verzögerung der Pumpe.
