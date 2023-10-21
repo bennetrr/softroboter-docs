@@ -1,0 +1,92 @@
+---
+title: Verbesserung des Projekts
+sidebar:
+  order: 5
+---
+
+import {Image} from 'astro:assets';
+
+## Redesign
+
+Fehlentscheidungen gehören mit zum Entwicklungsprozess, aber irgendwann ist ein komplettes Redesign sinnvoller, als immer nur Probleme zu beheben.
+Aus unserer Sicht ist die einzige sinnvolle Lösung, die ganze Steuerelektronik und Druckluftversorgung neu zu planen und zu bauen.
+
+<Image alt="Verbesserter Plan" src={import('$assets/electronics/optimized_plan.drawio.png')} style={{backgroundColor: "white", padding: "40px"}}/>
+
+### Raspberry Pi als Controller
+
+#### Problem
+
+Das Signal, das die Pumpe und das Ventil anschalten soll, kommt vom uArm und wird dort mit der Saugnapf-Funktion gesteuert.
+Eigentlich ist das Signal nicht zur externen Nutzung gedacht, sondern um die Pumpe und das Ventil direkt mit Strom zu versorgen.
+Deshalb haben wir keine genauen Daten, welche Spannung an dem Kabel anliegen soll.
+Da die Pumpe etwas verzögert werden muss, ist ein Arduino dazwischengeschaltet, der die Spannung misst, und dann das Ventil bzw. die Pumpe anschaltet, sobald die Spannung an dem Kabel über einen bestimmten Wert steigt.
+Aktuell sorgt die unbekannte Spannung zwar nicht für Probleme, allerdings ist es auf lange Zeit besser, alle unbekannten Komponenten aus der Schaltung zu eliminieren.
+
+Ein weiteres Problem ist, dass zur Bedienung immer ein PC mit der uArm Studio-Software benötigt wird.
+Die Software ist zum Beispiel auf den Schulrechnern nicht installiert, und nicht jeder hat immer einen Laptop dabei.
+Außerdem gibt es im uArm Studio nur eine Blocksprache, um den Roboterarm zu programmieren, die ziemlich umständlich zu bedienen ist, und die Installation von `python3`, `pip` und der uArm Python SDK ist für die meisten Leute zu aufwendig, um nur den Roboter zu benutzen.
+
+#### Lösung
+
+Ein Raspberry Pi hat im Gegensatz zum Arduino ein Linux-OS und USB-Ports.
+Über USB und die [uArm Python SDK](https://github.com/uArm-Developer/uArm-Python-SDK) wird der Roboterarm durch den Raspberry Pi gesteuert, was die Notwendigkeit von einem weiteren PC beseitigt.
+Die Pumpe und das Ventil werden auch direkt über den Raspberry Pi angesteuert (mithilfe einer Treiberschaltung), wodurch der Arduino wegfällt.
+
+Über einen Taster kann der vorprogrammierte Bewegungsablauf gestartet werden.
+Ein weiterer Taster fährt den Raspberry Pi herunter.
+Ein paar LEDs werden für verschiedene Statusausgaben verwendet.
+
+### Unbestimmte Komponenten
+
+#### Problem
+
+Unser Projekt benutzt mehrere Komponenten, von denen wir keine genauen technischen Daten haben (u.a. Roboterarm, Pumpe und Ventil).
+Die einzigen Daten kommen von ungenauen Messungen und Vermutungen.
+Deshalb ist es unmöglich, die einzelnen Komponenten aufeinander abzustimmen und Fehler in der Schaltung schnell zu finden.
+
+Ein gutes Beispiel ist die Stromversorgung des Ventils:
+Ventile ähnlicher Bauform und Größe haben meistens einen Schaltbereich von 5 V bis 6 V, deshalb haben wir auch vermutet, dass unser Ventil auch von 5 V bis 6 V schaltet.
+Die Betriebsspannung unserer Schaltung beträgt maximal 5 V, sobald es einen geringen Spannungsabfall in der Schaltung gibt, liegt die Spannung etwas darunter.
+Dann kann das Ventil schon nicht mehr richtig schalten und ist nicht mehr dicht.
+
+#### Lösung
+
+Die einzige Lösung für dieses Problem ist die Anschaffung einer neuen Pumpe und eines neuen Ventils.
+Da dann der Druck, die Druckrichtung und die Betriebsspannung bekannt sind, können die einzelnen Komponenten aufeinander abgestimmt und mit einer passenden Spannung versorgt werden.
+Das beseitigt vor allem die unbekannten Variablen aus der Problemsuche.
+
+### Stromversorgung
+
+Aktuell haben wir fünf Netzteile, die zum Betrieb des Softroboters gebraucht werden.
+Das ist auf Dauer ein ziemliches Kabelchaos, deshalb ist es am besten, wenn alles über die gleiche Hauptstromversorgung laufen würde.
+
+Da der Roboterarm 12V braucht, kann man die Pumpe und das Ventil so aussuchen, dass diese auch eine Betriebsspannung von 12V haben.
+Dann braucht man nur einen Spannungsregler für den Raspberry Pi, der eine Betriebsspannung von 5V hat.
+
+Um Spannungsabfälle in der Schaltung auszugleichen, die z.B. durch die Pumpe oder das Ventil anfallen, sollte man ein regelbares Netzteil auswählen.
+
+### Komponentenvorschläge
+
+| Komponente           | Typ                              | Technische Daten                                                                              | Bemerkungen                                                                           | Preis     |
+|----------------------|----------------------------------|-----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|-----------|
+| Roboterarm           | uFactory uArm                    | [Produktseite](https://www.ufactory.cc/uarm-collaborative-robot)                              | U<sub>B</sub> = 12V<br/>I<sub>max</sub> = 5A<sup>1</sup><br/>P<sub>max</sub> = 60W    | vorhanden |
+| µController          | Raspberry Pi 4B 1GB              | [Datenblatt](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/specifications/)     | U<sub>B</sub> = 5,1V<br/>I<sub>max</sub> = 3A<sup>2</sup><br/>P<sub>max</sub> = 15,3W | 50€       |
+| Ventil               |                                  |                                                                                               | U<sub>B</sub> = 12V                                                                   |           |
+| Pumpe                |                                  |                                                                                               | U<sub>B</sub> = 12V                                                                   |           |
+| Spannungsregler      | LM2679T-5.0/NOP                  | [Datenblatt](https://www.ti.com/lit/ds/symlink/lm2679.pdf)                                    | -                                                                                     | 6€        |
+| Druckregler          | MULTIFIX Druckregler 0,1 - 3 bar | [Datenblatt](https://www.landefeld.de/cgi/main.cgi?DISPLAY=artikel_datenblatt&param_0=280290) | -                                                                                     | vorhanden |
+| Hauptstromversorgung |                                  |                                                                                               | Regelbar<br/>U<sub>A</sub> = 12V<br/>I<sub>max</sub> = 10A<sup>3</sup>                |           |
+
+<p>
+  <sup>1</sup> Leistungsdaten des Roboterarms laut mitgeliefertem Netzteil.
+</p>
+
+<p>
+  <sup>2</sup> Leistungsdaten des Raspberry Pis laut [offizieller Dokumentation](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#typical-power-requirements).
+</p>
+
+<p>
+  <sup>3</sup> Die benötigte Maximalleistung der Hauptstromversorgung ist von dem maximalen Verbrauch der Pumpe und des Ventils abhängig.
+  Die angegebenen 10A sind nur die Leistungen der Roboterarms und des Raspberry Pis zusammenaddiert und zur nächsten 10er-Stelle aufgerundet.
+</p>

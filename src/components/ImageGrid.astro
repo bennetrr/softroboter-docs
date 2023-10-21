@@ -1,0 +1,43 @@
+---
+import {Image} from 'astro:assets';
+
+interface Props {
+  images: {
+    src: any;
+    alt: string;
+  }[]
+}
+
+const {images} = Astro.props;
+---
+
+<div class="container">
+  {images.map(image =>
+    <Image src={image.src} alt={image.alt} class="image"/>
+  )}
+</div>
+
+<style>
+  .container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .image {
+    margin-top: 0 !important;
+  }
+
+  @media screen and (max-width: 900px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .image {
+      max-height: 350px;
+      width: min-content;
+      place-self: center;
+    }
+  }
+</style>

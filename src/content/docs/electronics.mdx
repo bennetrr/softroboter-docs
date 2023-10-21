@@ -1,0 +1,68 @@
+---
+title: Druckluftverteilung und Steuerelektronik
+sidebar:
+  order: 4
+---
+
+import TextWithRightImage from '$components/TextWithRightImage.astro';
+
+![Schaltplan]($assets/electronics/circuit_plan.png)
+
+## Druckluftverteilung
+
+Der Softgripper benötigt Druckluft, um sich zu schließen und so ein Objekt zu greifen.
+Die Druckluft kommt von einer Pumpe, die wir aus dem Roboterarm ausgebaut haben.
+Wir haben uns dazu entschlossen, einen Druckminderer zwischen die Pumpe und den Softgripper zu schalten, der die Softgripper vor zu hohem Druck schützt, da uns ältere Versionen schon wegen zu viel Druck explodiert sind.
+
+Nach dem Druckregler kommt ein Magnetventil, das anfangs als Schnellauslass gedacht war, damit der Softgripper nicht zu lange zum Loslassen braucht.
+Mit dem aktuellen Aufbau ist ein Ausgangsventil allerdings zwingend erforderlich, da der Druckregler nur in eine Richtung Druck durchlässt.
+
+<TextWithRightImage image={{src: import('../../assets/electronics/hub.jpg'), alt: 'HUB nach dem Druck'}}>
+  Ventil und Pumpe / Druckregler sind über ein 3D-gedrucktes T-Stück miteinander verbunden, das an die interne Druckleitung des Roboterarms angeschlossen ist.
+  Die Leitung führt zum anderen Ende des Arms, wo die Werkzeuge angebracht werden.
+
+  Da wir nur eine Druckleitung, aber vier Softgripper haben, haben wir einen Verteiler, den sogenannten HUB, designt und mit dem Metall-3D-Drucker aus dem InLab gefertigt.
+  Der HUB hat vier kurze Rohre an der Seite, auf die die Softgripper aufgesteckt werden.
+  In der Oberseite des HUBs ist ein Gewinde, in das die Druckleitung des Roboterarms geschraubt werden kann.
+  Befestigt ist der HUB mit einer Halterung, die mit dem Roboterarm mitgeliefert wurde.
+</TextWithRightImage>
+
+## Steuerungselektronik
+
+Wir wollten, dass alles über ein Gerät gesteuert werden kann.
+Deshalb kann man den Softgripper über uArm Studio ein- und ausschalten.
+Dazu mussten wir ein Signal aus dem Roboterarm bekommen, mit dem wir die Pumpe und das Ventil schalten können.
+
+<TextWithRightImage image={{src: import('../../assets/electronics/electronics_testing.jpg'), alt: 'Testen der Steuerelektronik'}}>
+  Das Signal, das wir dazu benutzen, ist eigentlich zur direkten Ansteuerung der Pumpe und des Ventils gedacht.
+  Weil wir aber die Druckrichtung geändert haben (vorher hat die Pumpe einen Saugnapf angetrieben), können wir die Pumpe nicht starten und gleichzeitig das Ventil schließen, weil das Ventil nicht richtig schließt, wenn Druck anliegt.
+  Die Lösung ist eine Verzögerung der Pumpe.
+  Dazu haben wir einen Arduino benutzt, der nur die Spannung an dem Signal vom Roboterarm liest.
+  Wenn diese über einen bestimmten Wert steigt, schließt der Arduino erst das Ventil und schaltet dann eine Sekunde später die Pumpe an.
+</TextWithRightImage>
+
+Weil der Strom, den die Pumpe und das Ventil auf Dauer verbrauchen, zu viel für den Arduino ist, verwenden wir MOSFETs, um eine leistungsstärkere Stromversorgung benutzen zu können.
+Für das Ventil wird eine 5V-Stromversorgungsplatine verwendet, für die Pumpe ein 9V-Steckernetzteil.
+Beim Ausschalten der Pumpe und des Ventils können durch die Selbstinduktion hohe Spannungen entstehen.
+MOSFETs bzw. Halbleiterbauelemente sind dagegen sehr empfindlich.
+Um die MOSFETs davor zu schützen, sind parallel zu den induktiven Verbrauchern Rücklaufdioden geschaltet, die diese Spannung reduzieren.
+
+Am Arduino sind außerdem noch zwei LEDs angeschlossen, die zeigen sollen, ob das Ventil bzw. die Pumpe gerade angeschaltet sein sollen.
+
+## Komponenten
+
+Die folgende Liste enthält alle wichtigen Komponenten, die in der Schaltung verbaut sind.
+Zur Pumpe und zum Ventil haben wir leider keine technischen Daten, da diese aus dem Roboterarm ausgebaut wurden.
+
+| Komponente              | Typ                               | Technische Daten                                                                                                                                                                       |
+|-------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Roboterarm              | uFactory uArm                     | [Produktseite](https://www.ufactory.cc/uarm-collaborative-robot)                                                                                                                       |
+| µController             | Arduino Uno Rev3                  | [Produktseite](https://store.arduino.cc/products/arduino-uno-rev3)                                                                                                                     |
+| Pumpe                   | unbekannt (aus Roboter ausgebaut) | P ≈ 1 bar (bei U<sub>B</sub> = 5V)                                                                                                                                                     |
+| Ventil                  | unbekannt (aus Roboter ausgebaut) | U<sub>Schalt</sub> ≈ 5V                                                                                                                                                                |
+| Druckregler             | MULTIFIX Druckregler 0,1 - 3 bar  | [Datenblatt](https://www.landefeld.de/cgi/main.cgi?DISPLAY=artikel_datenblatt&param_0=280290)                                                                                          |
+| MOSFET                  | IRLB8721PBF                       | [Datenblatt](https://www.infineon.com/dgdl/irlb8721pbf.pdf?fileId=5546d462533600a40153566056732591)                                                                                    |
+| Diode                   | IN40007<br/>BY133                 | [Datenblatt](https://pdf1.alldatasheet.com/datasheet-pdf/view/329387/CHENG-YI/IN4007.html)<br/>[Datenblatt](https://pdf1.alldatasheet.com/datasheet-pdf/view/204783/DIOTEC/BY133.html) |
+| Stromversorgungsplatine | Elegoo MB-V2                      | [Datenblatt](http://www.pgccphy.net/1020/datasheets/ELEGOO%20Breadboard%20Power%20Supply%20Module.pdf)                                                                                 |
+
+Nicht aufgeführte Bauteile: LEDs grün und gelb, Widerstand 150 Ω, Kabel, Schlauch, Netzteile

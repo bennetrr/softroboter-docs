@@ -1,0 +1,45 @@
+---
+import {Image} from 'astro:assets';
+
+interface Props {
+  image: {
+    src: any;
+    alt: string;
+  }
+}
+
+const {image} = Astro.props;
+---
+
+<div class="container">
+  <div class="content">
+    <slot/>
+  </div>
+
+  <Image src={image.src} alt={image.alt} class="image"/>
+</div>
+
+<style>
+  .container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 60% 1fr;
+  }
+
+  .image {
+    margin-top: 0 !important;
+  }
+
+  @media screen and (max-width: 900px) {
+    .container {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .image {
+      max-height: 350px;
+      width: min-content;
+      place-self: center;
+    }
+  }
+</style>

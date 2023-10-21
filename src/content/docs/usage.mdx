@@ -1,0 +1,115 @@
+---
+title: Aufbau und Bedienung
+sidebar:
+  order: 2
+---
+
+import TextWithRightImage from '$components/TextWithRightImage.astro';
+
+## 1. Stromversorgung
+
+![Angeschlossene Stromversorgungen]($assets/usage/stromversorgung.jpg)
+
+Der Roboterarm, der Arduino, die Pumpe und das Ventil haben jeweils eigene Netzteile:
+
+- Das schwarze Tischnetzteil ist für den Roboterarm.
+- Für das Kabel mit dem lila USB-Stecker wird noch ein USB-Netzteil benötigt.
+  Die 5-polige Pfostenbuchse an der anderen Seite muss mit den 5 Pins, die am Arduino nach hinten weggehen, verbunden werden.
+  Das rote Kabel an der Pfostenbuchse muss bei dem Pin mit der Beschriftung `+5V` eingesteckt werden.
+- Das weiße Steckernetzteil muss in die Stromversorgungsplatine auf der Lochrasterplatine gesteckt werden; es ist für die Stromversorgung des Ventils zuständig.
+- Das andere weiße Steckernetzteil für die Pumpe ist fest auf der Lochrasterplatine verlötet.
+- Eine weitere Steckdose wird u.U. für einen Laptop benötigt
+
+:::tip[Anmerkung zum USB-Netzteil]
+Für den Arduino sollte am besten ein USB 2.0-Netzteil verwendet werden, das konstant 5V, max. 2A ausgibt.
+Neuere Netzteile haben teilweise variable Ausgangsspannungen bzw. Schnellladetechnologien, die möglicherweise zu Problemen mit dem Arduino führen können.
+:::
+
+:::danger[Achtung vor Verpolung!]
+Die Pfostenbuchse des Arduino-Kabels hat keinen Verpolungsschutz.
+Wenn die Buchse falsch herum eingesteckt ist, liegen über die Datenleitung des Arduinos 5V an, wodurch dieser wahrscheinlich kaputtgehen wird.
+:::
+
+Bei den Sachen zum Projekt sollte eine Mehrfachsteckdose dabei liegen, an der schon die ganzen Netzteile angeschlossen sind.
+Sollte das nicht der Fall sein, befindet sich diese irgendwo im InLab (die Netzteile sind hoffentlich trotzdem bei dem Projekt dabei).
+
+:::note[Wichtig!]
+Der Strom muss ausgeschaltet sein, bis alle anderen Sachen auch verbunden sind.
+Ansonsten fängt u.a. der Arduino an zu spinnen, weil an einem konfiguriertem Eingang ein undefiniertes Potenzial anliegt.
+:::
+
+## 2. Verbindungen
+
+Vor der Benutzung des Softroboters muss sichergestellt werden, dass alle Kabel an den richtigen Pins des Arduinos angeschlossen sind.
+Des Weiteren muss geprüft werden, ob die Druckluftverbindungen stimmen:
+
+- Kabel
+  - Oranges Kabel (von Roboterarm) mit Aufschrift `A0` → Pin `A0`
+  - Gelbes Kabel (von Arduino) mit Aufschrift `D12` → Pin `D7`
+  - Grünes Kabel (von Arduino) mit Aufschrift `D13` → Pin `D8`
+  - Graue / weiße Kabel mit Aufschrift `GND` → Jeweils einen der `GND`-Pins
+- Druckluft
+  - Vorderer Ausgang der Pumpe → Linke Seite des Druckreglers (siehe Pfeile für Druckrichtung auf der Unterseite des Druckreglers)
+  - Rechte Seite des Druckreglers → T-Stück
+  - Metallrohr des Magnetventils → T-Stück
+  - T-Stück → Gummischlauch aus dem Roboterarm
+- USB-Kabel von eigenem PC / Laptop zum Roboterarm
+
+<TextWithRightImage image={{src: import('../../assets/usage/arduino_kabel.jpg'), alt: 'Angeschlossene Kabel am Arduino'}}>
+  :::note[Schaltplan]
+  Der Schaltplan ist auf der Seite [Druckluftverteilung und Steuerelektronik](/electronics) verfügbar.
+  :::
+
+  Wichtig für die automatische Steuerung ist, dass der Roboterarm links oben auf der Holzplatte steht (siehe Foto oben).
+</TextWithRightImage>
+
+## 3. uArm Studio
+
+Zum Steuern des Roboterarms wird die Software [uArm Studio](https://www.ufactory.cc/download-uarm-robot) benutzt (Download weiter unten auf der Seite).
+Sie ist für Windows, Mac und Linux (distributionsübergreifend als AppImage) verfügbar.
+
+Jetzt, da alles angeschlossen ist, kann auch der Strom für die Schaltung angeschaltet werden.
+Der Roboterarm hat zusätzlich einen eigenen Schalter.
+
+Wenn der Roboterarm angeschaltet ist, kann auch uArm Studio gestartet werden.
+Die Software hat zwei wichtige Funktionen, die bei dem Softroboter genutzt werden: Blockly und Control (mehr dazu später).
+
+![uArmStudio Startbildschirm mit wichtigen Funktionen eingerahmt]($assets/usage/uarmstudio_start.png)
+
+## 4. Automatische Steuerung
+
+Mit Blockly kann ein Bewegungsablauf in einer Blocksprache, die ähnlich zu Scratch ist, programmiert werden.
+Für unseren Versuchsaufbau haben wir ein Script erstellt, das den Roboterarm bewegt und den Softgripper steuert.
+Das Script ist in den Projektdateien enthalten, die in der [Projekteinleitung](/softroboter/introduction) zum Download zu Verfügung stehen.
+Die Datei heißt `Robotersteuerung.xml`.
+
+In Blockly kann die XML-Datei mit dem Ordnersymbol unterhalb der Projektliste importiert werden.
+
+![uArmStudio Blockly mit wichtigen Funktionen eingerahmt]($assets/usage/uarmstudio_import.png)
+
+Nach dem Importieren ist das Projekt zwar in der Liste, allerdings ist es noch nicht geöffnet.
+Dazu muss man erst auf die Zeile mit dem Projekt doppelklicken.
+Danach kann man die Blöcke sehen und bearbeiten.
+Um den Bewegungsablauf zu starten, muss der grüne Play-Button oben rechts betätigt werden.
+
+:::caution[Was macht der Stop-Button?]
+Der Stop-Button, der während der Laufzeit des Scripts in der Toolbar ist, funktioniert nicht zuverlässig, um das Script sofort zu stoppen.
+Es wird immer mindestens der laufende Block zu Ende ausgeführt, manchmal sogar noch weitere Blöcke.
+
+Wenn Personen, der Softroboter selbst oder andere Gegenstände zu Schaden kommen könnten, sollte die ganze Schaltung vom Netz getrennt werden.
+
+Am Ende des Scripts muss der Stop-Button aber gedrückt werden, da das Script sonst scheinbar nicht von alleine stoppt.
+:::
+
+### Bewegungsablauf
+
+Der Roboter fährt in die Ausgangsposition, die gerade nach vorne gerichtet ist, sodass der Greifer über dem zu greifenden Objekt liegt.
+Dann bewegt sich der Roboter nach unten, schaltet den Softgripper an, bewegt sich wieder hoch und dreht sich zu der Position, wo das Objekt abgelegt werden soll.
+Danach bewegt der Roboter sich wieder nach unten, schaltet den Softgripper aus und bewegt sich wieder zur Ausgangsposition.
+
+## 5. Manuelle Steuerung
+
+Mit Control können die einzelnen Funktionen des Roboterarms manuell gesteuert werden.
+Der Softgripper kann über den Toggle `Suction` aktiviert und deaktiviert werden.
+
+![uArmStudio Control]($assets/usage/uarmstudio_control.png)

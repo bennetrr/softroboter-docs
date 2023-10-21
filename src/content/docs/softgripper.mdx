@@ -1,0 +1,53 @@
+---
+title: Herstellung der Softgripper
+sidebar:
+  order: 3
+---
+
+import ImageGrid from '$components/ImageGrid.astro';
+
+<iframe style={{width: "100%", aspectRatio: "16/9", border: 'none'}}
+        src="https://www.youtube-nocookie.com/embed/-BloF0uXP8Y"
+        title="Herstellung eines Softgrippers | BK Geldern | YouTube"
+        allow="fullscreen"
+/>
+
+Die Finger des Softgrippers werden aus Elastomeren hergestellt, einem sehr elastischen und reißfesten Gummimaterial.
+Es besteht aus zwei Bestandteilen, die in diesem Fall Part A und B genannt werden.
+Werden diese Bestandteile zusammengefügt und vermischt, verfestigt sich das Gemisch nach ein paar Stunden, je nach Temperatur.
+
+<ImageGrid images={[
+  {src: import('../../assets/softgripper/materialien.jpg'), alt: 'Materialien des Fingers'},
+  {src: import('../../assets/softgripper/gemisch.jpg'), alt: 'Mischung der Materialien'}
+]}/>
+
+Zunächst werden Part A und B vermischt und in die zuvor gedruckten Formen gegossen.
+Dabei dürfen möglichst keine Luftblasen entstehen, da sie sonst später als Schwachpunkte bei Druck hinderlich sein können.
+
+:::tip[Tipp]
+Optimal wäre es, eine Unterdruckkammer zu benutzen, um die Luftblasen zu entfernen.
+:::
+
+:::note[3D-Modelle der Formen]
+Die Formen können einfach mit einem 3D-Drucker hergestellt werden.
+Die 3D-Modelle dazu sind in den Projektdateien enthalten, die in der [Projekteinleitung](/softroboter/introduction) zum Download zu Verfügung stehen.
+Die Formen haben wir von einem [Tutorial auf Instructables.com](https://www.instructables.com/Soft-Robotic-Gripper/)
+:::
+
+<ImageGrid images={[
+  {src: import('../../assets/softgripper/form_oben_filled.jpg'), alt: 'Obere Form gefüllt mit den Kunststoffen'},
+  {src: import('../../assets/softgripper/form_unten_filled.jpg'), alt: 'Untere Form gefüllt mit den Kunststoffen'}
+]}/>
+
+Nachdem der dickflüssige Inhalt der Formen im Ofen bei maximal 50 °C fest geworden ist, können die Teile des Softgrippers aus den Formen entfernt werden.
+Die Gummiteile können normalerweise relativ leicht aus den Formen gezogen werden, aber man muss gegebenenfalls ein Messer benutzen, um den Anfang zu finden.
+
+<ImageGrid images={[
+  {src: import('../../assets/softgripper/einzelteile.jpg'), alt: 'Einzelteile'},
+  {src: import('../../assets/softgripper/endprodukt.jpg'), alt: 'Endprodukt'}
+]}/>
+
+Zum Schluss wird die Unter- und Oberseite des Grippers zusammengefügt. Dafür wird etwas von dem Gemisch der Parts A und B als Kleber benutzt. Es muss also ein bisschen auf ein Teil aufgetragen werden und die beiden Teile möglichst gerade aufeinander gelegt.
+Als letztes wird der Finger wieder im Ofen ausgehärtet.
+
+Nun ist der Softgripper fertig.
