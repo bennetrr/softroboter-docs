@@ -1,36 +1,44 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-      variant: primary
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
+title: Projekteinleitung
+sidebar:
+  order: 1
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import TextWithRightImage from '$components/TextWithRightImage.astro';
 
-## Next steps
+![Übersicht über das Projekt]($assets/introduction/project_overview.jpg)
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+## Das Problem mit herkömmlichen Robotern
+
+Herkömmliche Roboter haben eine starre Struktur und können deshalb nur schlecht oder gar nicht mit empfindlichen Objekten umgehen, sich flexibel in komplexen Umgebungen bewegen oder durch enge Öffnungen quetschen.
+Ein Softroboter kann einen Gegenstand behutsam ohne Schäden von einem Ort zum anderen transportieren.
+
+Ein Softgripper besteht in der Regel aus weichen Materialien wie Silikon oder Schaumstoff und wird mit Druckluft gesteuert.
+Dies ermöglicht große elastische Verformungen, begrenzt die auftretenden Kräfte und minimiert das Gefahrenpotenzial.
+Gleichzeitig können mit demselben Greifer unterschiedlichste Objekte gegriffen werden, da sich Softgripper leicht an verschiedene Formen anpassen können.
+
+Unser Projekt besteht darin, einen solchen Softgripper herzustellen und ihn an einem Roboterarm zu befestigen.
+Außerdem haben wir uns damit beschäftigt, wie wir den Softgripper effizient ansteuern können.
+
+## Wer wir sind
+
+Das Projekt wurde von Marcel Szafraniec, Erik Tutsch, Bennet Ranft, Manuel Paeßens und Maximilian Sokol durchgeführt.
+Wir sind (bzw. waren) Schüler des beruflichen Gymnasiums für Elektrotechnik des Berufskolleg Gelderns.
+
+Für die Durchführung des Projekts durften wir das Innovationslabor der Schule (kurz InLab) benutzen, das viele Werkzeuge und Maschinen zu Verfügung stellt.
+
+## Kooperation mit dem Worcester Polytechnic Institute
+
+<TextWithRightImage image={{src: 'introduction/old_softgripper.jpg', alt: 'Alte Version des Softgrippers'}}>
+  Dieses Projekt war anfangs der Nachfolger für eine andere Bauart eines Softgrippers, den wir in der 11. Klasse gebaut haben.
+  Der alte Softgripper (siehe Foto rechts) ist in Zusammenarbeit mit Markus Nemitz entstanden.
+  Nemitz, Professor am Worcester Polytechnic Institute, forscht, wie man "sonst passive elastomere Materialien robotisieren" kann.
+</TextWithRightImage>
+
+## Projektdateien
+
+Alle Pläne, 3D-Modelle und Programme, die zum Projekt gehören, stehen hier zum Download zu Verfügung.
+Die meisten 3D-Dateien (`.ipt`, `.ipj`) können mit Autodesk Inventor 2023 oder neuer geöffnet werden.
+Die Software ist auf den PCs im InLab installiert, Autodesk bietet aber auch kostenfreie Schüler- und Studentenversionen an.
+
+[Download der Projektdateien](/dl/softroboter/Projektdateien.zip)
