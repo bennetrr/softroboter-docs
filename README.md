@@ -1,3 +1,6 @@
+> [!WARNING]
+> Dieses Projekt ist archiviert und wird nicht mehr weiterentwickelt.
+
 # Softroboter Documentation
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
